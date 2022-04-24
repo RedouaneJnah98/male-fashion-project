@@ -13,7 +13,11 @@ $records_per_page = 6;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 $product = new Product($db);
-$stmt = $product->read($from_record_num, $records_per_page);
+$products = $product->read($from_record_num, $records_per_page);
+
+$product_image = new ProductImage($db);
+
+
 ?>
 
 <!-- Page Preloder -->
@@ -235,77 +239,86 @@ $stmt = $product->read($from_record_num, $records_per_page);
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
-                                <ul class="product__hover">
-                                    <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
-                                    <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
-                                    </li>
-                                    <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6>Piqué Biker Jacket</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
-                                <div class="rating">
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                </div>
-                                <h5>$67.24</h5>
-                                <div class="product__color__select">
-                                    <label for="pc-4">
-                                        <input type="radio" id="pc-4">
-                                    </label>
-                                    <label class="active black" for="pc-5">
-                                        <input type="radio" id="pc-5">
-                                    </label>
-                                    <label class="grey" for="pc-6">
-                                        <input type="radio" id="pc-6">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item sale">
-                            <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
-                                <span class="label">Sale</span>
-                                <ul class="product__hover">
-                                    <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
-                                    <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
-                                    </li>
-                                    <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6>Multi-pocket Chest Bag</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
-                                <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-o"></i>
-                                </div>
-                                <h5>$43.48</h5>
-                                <div class="product__color__select">
-                                    <label for="pc-7">
-                                        <input type="radio" id="pc-7">
-                                    </label>
-                                    <label class="active black" for="pc-8">
-                                        <input type="radio" id="pc-8">
-                                    </label>
-                                    <label class="grey" for="pc-9">
-                                        <input type="radio" id="pc-9">
-                                    </label>
+                    <?php while ($row = $products->fetch(PDO::FETCH_OBJ)): ?>
+                        <!-- Add Product ID  -->
+                        <?php
+                        $product_image->product_id = $row->id;
+                        $stmt_product_image = $product_image->readFirst();
+                        ?>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <?php while ($row_product_image = $stmt_product_image->fetch(PDO::FETCH_OBJ)): ?>
+                                    <div class="product__item__pic set-bg" data-setbg="<?= 'img/product/' . $row_product_image->name ?>">
+                                        <ul class="product__hover">
+                                            <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                            <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
+                                            </li>
+                                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                                        </ul>
+                                    </div>
+                                <?php endwhile; ?>
+                                <div class="product__item__text">
+                                    <h6><?= $row->name ?></h6>
+                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    <h5><?= $row->price ?></h5>
+                                    <div class="product__color__select">
+                                        <label for="pc-4">
+                                            <input type="radio" id="pc-4">
+                                        </label>
+                                        <label class="active black" for="pc-5">
+                                            <input type="radio" id="pc-5">
+                                        </label>
+                                        <label class="grey" for="pc-6">
+                                            <input type="radio" id="pc-6">
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endwhile; ?>
+                    <!--                    <div class="col-lg-4 col-md-6 col-sm-6">-->
+                    <!--                        <div class="product__item sale">-->
+                    <!--                            <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">-->
+                    <!--                                <span class="label">Sale</span>-->
+                    <!--                                <ul class="product__hover">-->
+                    <!--                                    <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>-->
+                    <!--                                    <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>-->
+                    <!--                                    </li>-->
+                    <!--                                    <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>-->
+                    <!--                                </ul>-->
+                    <!--                            </div>-->
+                    <!--                            <div class="product__item__text">-->
+                    <!--                                <h6>Multi-pocket Chest Bag</h6>-->
+                    <!--                                <a href="#" class="add-cart">+ Add To Cart</a>-->
+                    <!--                                <div class="rating">-->
+                    <!--                                    <i class="fa fa-star"></i>-->
+                    <!--                                    <i class="fa fa-star"></i>-->
+                    <!--                                    <i class="fa fa-star"></i>-->
+                    <!--                                    <i class="fa fa-star"></i>-->
+                    <!--                                    <i class="fa fa-star-o"></i>-->
+                    <!--                                </div>-->
+                    <!--                                <h5>$43.48</h5>-->
+                    <!--                                <div class="product__color__select">-->
+                    <!--                                    <label for="pc-7">-->
+                    <!--                                        <input type="radio" id="pc-7">-->
+                    <!--                                    </label>-->
+                    <!--                                    <label class="active black" for="pc-8">-->
+                    <!--                                        <input type="radio" id="pc-8">-->
+                    <!--                                    </label>-->
+                    <!--                                    <label class="grey" for="pc-9">-->
+                    <!--                                        <input type="radio" id="pc-9">-->
+                    <!--                                    </label>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                     <!--                    <div class="col-lg-4 col-md-6 col-sm-6">-->
                     <!--                        <div class="product__item">-->
                     <!--                            <div class="product__item__pic set-bg" data-setbg="img/product/product-4.jpg">-->

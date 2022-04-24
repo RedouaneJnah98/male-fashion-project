@@ -24,6 +24,7 @@ class Product
     {
         // get all products from database
         $query = "SELECT id, name, description, price FROM " . $this->table_name . " ORDER BY created DESC LIMIT ?, ?";
+
         // prepare statement
         $stmt = $this->conn->prepare($query);
 
