@@ -37,4 +37,24 @@ class Product
         // return
         return $stmt;
     }
+
+    public function count()
+    {
+        // query to count all products
+        $query = "SELECT COUNT(*) FROM " . $this->table_name;
+        // prepare statement
+        $stmt = $this->conn->prepare($query);
+        // execute query
+        $stmt->execute();
+        // get row value
+        $rows = $stmt->fetch(PDO::FETCH_NUM);
+
+        // return count
+        return $rows[0];
+    }
+
+    public function addClass(int $currentPage, int $page, string $class): string
+    {
+        return ($currentPage === $page) ? $class : '';
+    }
 }
