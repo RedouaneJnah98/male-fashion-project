@@ -57,4 +57,19 @@ class Product
     {
         return ($currentPage === $page) ? $class : '';
     }
+
+    public function readByIds(array $ids)
+    {
+        $ids_arr = str_repeat('?,', count($ids) - 1) . '?';
+//
+//        // query to select products
+        $query = "SELECT id, name, price FROM " . $this->table_name . " WHERE id IN ($ids_arr) ORDER BY name";
+//        // prepare statement
+        $stmt = $this->conn->prepare($query);
+//        // execute query
+        $stmt->execute($ids);
+//
+//        // return values from database
+        return $stmt;
+    }
 }

@@ -25,6 +25,11 @@ $total_rows = $product->count();
 // pagination
 $total_pages = ceil($total_rows / $records_per_page);
 
+// check if session cart isset
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
 ?>
 
 <!-- Page Preloder -->
@@ -266,7 +271,13 @@ $total_pages = ceil($total_rows / $records_per_page);
                                 <?php endwhile; ?>
                                 <div class="product__item__text">
                                     <h6><?= $row->name ?></h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <form class="add-to-cart">
+                                        <?php if (array_key_exists($row->id, $_SESSION['cart'])): ?>
+                                            <a href="#" class="add-cart">Update Cart</a>
+                                        <?php else: ?>
+                                            <a href="add_to_cart.php?id=<?= $row->id ?>" class="add-cart product-id">+ Add To Cart</a>
+                                        <?php endif; ?>
+                                    </form>
                                     <div class="rating">
                                         <i class="fa fa-star-o"></i>
                                         <i class="fa fa-star-o"></i>
@@ -299,7 +310,7 @@ $total_pages = ceil($total_rows / $records_per_page);
                                 <a class="page-link" href="shop.php?page=<?= $currentPage - 1 ?>">Previous</a>
                             </li>
                             <?php for ($page = 1; $page <= $total_pages; $page++): ?>
-                                <li class="page-item"><a class="page-link" href="shop.php?page=<?= $page ?>"><?= $page ?></a></li>
+                                <li class="page-item <?= $product->addClass($currentPage, $page, 'active') ?>"><a class="page-link" href="shop.php?page=<?= $page ?>"><?= $page ?></a></li>
                             <?php endfor; ?>
                             <li class="page-item <?= $product->addClass($currentPage, $total_pages, 'disabled') ?>">
                                 <a class="page-link" href="shop.php?page=<?= $currentPage + 1 ?>">Next</a>
@@ -315,3 +326,11 @@ $total_pages = ceil($total_rows / $records_per_page);
 
 <!-- include Footer -->
 <?php include "layout/layout_footer.php"; ?>
+
+<script>
+    // $(document).ready(function () {
+    //     $('.add-to-cart').on('submit', function () {
+    //         console.log('test');
+    //     })
+    // })
+</script>
