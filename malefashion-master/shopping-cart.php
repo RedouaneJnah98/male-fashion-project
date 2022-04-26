@@ -1,11 +1,4 @@
 <?php
-// start session
-session_start();
-// if session does not exist, create one
-//if (!$_SESSION['cart']) {
-//    $_SESSION['cart'] = [];
-//}
-
 // include Database
 include "config/Database.php";
 // include objects
@@ -30,102 +23,11 @@ $product_image = new ProductImage($db);
     </div>
 
     <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
-    <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__option">
-            <div class="offcanvas__links">
-                <a href="#">Sign in</a>
-                <a href="#">FAQs</a>
-            </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
-        </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
-        <div id="mobile-menu-wrap"></div>
-        <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
-        </div>
-    </div>
+<?php include "layout/offcanvas.php"; ?>
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
-        <div class="header__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-7">
-                        <div class="header__top__left">
-                            <p>Free shipping, 30-day return or refund guarantee.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-5">
-                        <div class="header__top__right">
-                            <div class="header__top__links">
-                                <a href="#">Sign in</a>
-                                <a href="#">FAQs</a>
-                            </div>
-                            <div class="header__top__hover">
-                                <span>Usd <i class="arrow_carrot-down"></i></span>
-                                <ul>
-                                    <li>USD</li>
-                                    <li>EUR</li>
-                                    <li>USD</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__logo">
-                        <a href="index.php"><img src="img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li><a href="index.php">Home</a></li>
-                            <li class="active"><a href="shop.php">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="about.php">About Us</a></li>
-                                    <li><a href="shop-details.php">Shop Details</a></li>
-                                    <li><a href="shopping-cart.php">Shopping Cart</a></li>
-                                    <li><a href="checkout.php">Check Out</a></li>
-                                    <li><a href="blog-details.php">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="blog.php">Blog</a></li>
-                            <li><a href="contact.php">Contacts</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
-                    </div>
-                </div>
-            </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
-        </div>
-    </header>
+<?php include "layout/navigation.php"; ?>
     <!-- Header Section End -->
 
     <!-- Breadcrumb Section Begin -->
@@ -183,12 +85,23 @@ $product_image = new ProductImage($db);
                                 $quantity = $_SESSION['cart'][$row->id]['quantity'];
                                 $subtotal = $row->price * $quantity;
 
+                                $item_count += $quantity;
+                                //  store item count in session to use it in navigation page
+                                $_SESSION['item_count'] = $item_count;
                                 $total += $subtotal;
+                                //  store total in session to display it in navigation page
+                                $_SESSION['total'] = $total;
+
+                                // get the first image from database
+                                $product_image->product_id = $row->id;
+                                $stmt_product_image = $product_image->readFirst();
                                 ?>
                                 <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
-                                            <img src="img/shopping-cart/cart-1.jpg" alt="">
+                                            <?php while ($image = $stmt_product_image->fetch(PDO::FETCH_OBJ)): ?>
+                                                <img src="img/product/<?= $image->name ?>" alt="product image" width="80">
+                                            <?php endwhile; ?>
                                         </div>
                                         <div class="product__cart__item__text">
                                             <h6><?= $row->name ?></h6>
@@ -247,6 +160,7 @@ $product_image = new ProductImage($db);
             </div>
         </div>
     </section>
+
     <!-- Shopping Cart Section End -->
 
     <!-- include Footer -->

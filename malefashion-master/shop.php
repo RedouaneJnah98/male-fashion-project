@@ -1,8 +1,5 @@
 <!-- include Header -->
 <?php
-//start session
-session_start();
-
 include "layout/layout_header.php";
 include "config/Database.php";
 include "objects/Product.php";

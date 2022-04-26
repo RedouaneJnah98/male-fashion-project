@@ -1,3 +1,4 @@
+<?php session_start() ?>
 <header class="header">
     <div class="header__top">
         <div class="container">
@@ -56,8 +57,8 @@
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="../img/icon/search.png" alt=""></a>
                     <a href="#"><img src="../img/icon/heart.png" alt=""></a>
-                    <a href="../shopping-cart.php"><img src="../img/icon/cart.png" alt=""> <span>0</span></a>
-                    <div class="price">$0.00</div>
+                    <a href="../shopping-cart.php"><img src="../img/icon/cart.png" alt=""> <span><?= $_SESSION['item_count'] ?? 0 ?></span></a>
+                    <div class="price">$<?= $_SESSION['total'] ?? 0.00 ?></div>
                 </div>
             </div>
         </div>
