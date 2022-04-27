@@ -61,15 +61,36 @@ class Product
     public function readByIds(array $ids)
     {
         $ids_arr = str_repeat('?,', count($ids) - 1) . '?';
-//
-//        // query to select products
+
+        // query to select products
         $query = "SELECT id, name, price FROM " . $this->table_name . " WHERE id IN ($ids_arr) ORDER BY name";
-//        // prepare statement
+        // prepare statement
         $stmt = $this->conn->prepare($query);
-//        // execute query
+        // execute query
         $stmt->execute($ids);
-//
-//        // return values from database
+
+        // return values from database
         return $stmt;
+    }
+
+    public function readSingle()
+    {
+        // query one product from database
+        $query = "SELECT id, name, description, price FROM " . $this->table_name . " WHERE id = ?";
+        // prepare statement
+        $stmt = $this->conn->prepare($query);
+        // sanitize
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        // bind product id value
+        $stmt->bindParam(1, $this->id);
+        // execute query
+        $stmt->execute();
+        // get row values
+        $row = $stmt->fetch(PDO::FETCH_OBJ);
+
+        // assign retrieved row values to object properties
+        $this->name = $row->name;
+        $this->description = $row->description;
+        $this->price = $row->price;
     }
 }

@@ -262,7 +262,7 @@ if (!isset($_SESSION['cart'])) {
                                             <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
                                             <li><a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
                                             </li>
-                                            <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                                            <li><a href="shop-details.php?id=<?= $row->id ?>"><img src="img/icon/search.png" alt=""></a></li>
                                         </ul>
                                     </div>
                                 <?php endwhile; ?>

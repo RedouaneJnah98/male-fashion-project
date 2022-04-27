@@ -31,4 +31,21 @@ class ProductImage
 
         return $stmt;
     }
+
+    public function readAll(int $id)
+    {
+        // query all images from database
+        $query = "SELECT id, product_id, name FROM " . $this->table_name . " WHERE product_id = ? ORDER BY name ASC";
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+        // sanitize
+        $id = htmlspecialchars(strip_tags($id));
+        // bind product id variable
+        $stmt->bindParam(1, $id);
+        // execute query
+        $stmt->execute();
+
+        // return values
+        return $stmt;
+    }
 }
